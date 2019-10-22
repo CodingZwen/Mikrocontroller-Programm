@@ -1,15 +1,10 @@
-/* 2BKI21 INFP
- * Autor: Jan Freitag
- * Datum: 01.10.2019
- */
- 
- 
+
 
 #include <c51rx2.h>
 #include <stdio.h>
 #include <lcd.h>
-// ****************************************
-sfr at P1 Schalter;     // 8 DIP-Schalter an P1
+
+sfr at P1 Schalter;     
 sfr at P2 Ampel;         // 8 LEDs am Port P2
 sbit at P1_0 S0;
 sbit at P1_1 S1;        // der 2.Schalter (einer!) an P1
@@ -23,16 +18,9 @@ sbit at P2_6 LED6;
 sbit at P2_7 LED7;
 sbit at P3_3 Ampeltaste;
 
-// ****************************************
-// Funktionsprototypen
-// ****************************************
 void delay1ms(void) ;
 void delay(unsigned int Millisekunden);
 void interiell_seriell(void);
-
-// ****************************************
-// Hauptprogramm
-// ****************************************
 
 
 #define PHASE1    0b10010100
@@ -137,49 +125,3 @@ ES = 0;
 
    
  
-  //old
-
-/*
-
-
- delay(500);
-		if (Bl_Taster == 1 && Merker == 0)
-		{
-			// Steigende Flanke erkannt 
-			Merker = 1;
-      
-			LEDs++;
-		}
-		else
-		{
-			if (Bl_Taster == 1 && Merker == 1)
-			{
-				
-			}
-			else
-			{
-				if (Bl_Taster == 0 && Merker == 1)
-				{
-					// fallende Flanke erkannt 
-					Merker = 0;
-               LEDs--;
-				}
-				else
-				{
-					// Konstant 0-Pegel 
-					;
-				}
-			}
-*/
-   
-
-
-
-
-
-
-
-
-//  LEDs = LEDs << 1;      // Leds können einzeln hochgezählt werden
-
-
