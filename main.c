@@ -52,7 +52,7 @@ void main (void)
 
     IT0=1;
     IE0=0;
-    EX0 = 1;
+    EX0 = 1; //das ist P3_3 von mikrocontroller
     EA =1;
     
     while(1)   
