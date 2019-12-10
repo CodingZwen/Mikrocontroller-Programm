@@ -1,61 +1,105 @@
-
-/*
-"Erstes" C Programm von Sven-Patrick Schulze
-24.09.2019
-
-************************************************************
-*/
-
-
 #include <c51rx2.h>
+#include <lcd.h>
+#include <stdio.h>
 
-sfr at P2 leds;
+sbit at P3_2 timerbutton;
+sbit at P2_0 LED0;
+sbit at P2_1 LED1;
+sfr at P2 LED;
 
-void delay(unsigned int sekunden);
-void delay1ms(void);
+unsigned long getmillis(void);
+void initTimer(void);
+void interiell_seriell(void);
 
+
+unsigned long ms;
+unsigned long ausschalten;
+char buffer[20];
+
+
+typedef struct {
+
+    unsigned int sekunden;
+    unsigned int minuten;
+    unsigned int stunden;
+
+}uhr;
+
+uhr u;
 
 void main (void) 
 {
   
-    leds = 0;
+    u.sekunden =0;
+    u.minuten = 0;
+    u.stunden = 0;
 
-    TMOD = 0b00010001; //wir nehmen beide timer aber aktivieren nur einen davon
-    TR1 = 1; //Timer 1 auswaehlen
-    TL1 =(65535-65531)%256; // Timerlength -> Timerlow
-    TH1 =(65535-65531)/256; // Timerhigh
-    unsigned int re = 256;
-    unsigned int re2 = 12500;
-      
-
+    initTimer();
+    initlcd();
+    interiell_seriell();
     while(1)
     {
-        
-    if(TF1)
-       { // f=88Hz => T=1/f = 11,36ms = 11363us => Timer soll halbe Zeit erzeugen = 5681
+        if(timerbutton)
+        {
+         LED0=1;
+         ausschalten = getmillis() + 10000;
+        }
+    
+        if(getmillis() == ausschalten)
+        {
+            LED0 =0;
+        }
        
-        TL1 =(65535-re2)%256; // Timerlength -> Timerlow
-        TH1 =(65535-re2)/256; // Timerhigh
-
-       TF1=0;
-       P2_1= ~P2_1;
-       }
-        
-     }
-}
-
-void delay(unsigned int count)
-{
-    unsigned int k = count;
-    for(;k>0;k--){
-    delay1ms();
+           
     }
+}
+
+
+
+
+void initTimer(void)
+{
+
+TMOD = 0x11; //timerspezifikation auswaehlen
+ET0 = 1;    //
+EA=1; //interrupt
+TR0 =1;
+LED = 0b00000000;
 
 }
 
-void delay1ms(void)
-{
 
-    int k = 125;
-    for(;k>0;k--){;}
+
+unsigned long getmillis(void)
+{
+    unsigned long temp;
+    EA=0; //interrupt stoppen damit uns beim low oder highbyte reinschieben hier nichts passiert
+    temp = ms;
+    EA=1;
+
+    return temp;
+}
+
+void Timer0_isr(void) interrupt 1
+{
+    TL0 = (65536-50000)%256; //high & low byte setzen
+    TH0 = (65536-50000)/256;
+    ms++; //20 inkrementiert ist 1s
+    
+    if(ms % 20 == 0){
+        
+    u.sekunden++;
+    
+    sprintf(buffer,"%d", u.sekunden);
+    textlcd(buffer,1);
+    }
+}
+
+void interiell_seriell(void)
+{
+PCON = PCON | 0x80;
+BDRCON = 0x1F;
+BRL = 217;
+SCON = 0x52;
+ES = 0;
 }
