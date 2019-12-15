@@ -60,7 +60,7 @@ void main (void)
 void initTimer(void)
 {
 
-TMOD = 0x11; //timerspezifikation auswaehlen
+TMOD = 0x11; //timerspezifikation auswaehlen 10001
 ET0 = 1;    //
 EA=1; //interrupt
 TR0 =1;
@@ -97,9 +97,9 @@ void Timer0_isr(void) interrupt 1
 
 void interiell_seriell(void)
 {
-PCON = PCON | 0x80;
+PCON = PCON | 0x80;//PCON CPU-Register SMOD 1 = doppelte Baudtrate für serielle Schnittestelle | SMOD0 | - | POF | GF1 | GF0 | PD | IDL
 BDRCON = 0x1F;
 BRL = 217;
-SCON = 0x52;
-ES = 0;
+SCON = 0x52; // 8bit uart Empfang TI setzen
+ES = 0; //no serial input
 }
