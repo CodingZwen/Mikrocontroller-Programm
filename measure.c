@@ -8,22 +8,7 @@
 #include <c51rx2.h>
 #include <lcd.h>
 
-// ****************************************
-sfr at P1 Schalter; // 8 DIP-Schalter an P1
-sfr at P2 Motor; // 8 LEDs am Port P2
 
-sbit at P3_2 SW_Taster; //Sw_Taster;
-sbit at P3_3 Bl_Taster; //Bl_Taster;
-sbit at P1_0 TZ; //Tor zu
-sbit at P1_7 TO; //Tor offen
-
-// ****************************************
-// Definitionen von Konstanten
-// ****************************************
-
-// ****************************************
-// globale Varaiblen
-// ****************************************
 bit ShowTime, merker;
 unsigned char zustand ;
 unsigned char sekunde= 0, minute = 0 , stunde =0,tag =0, monat= 0, jahr =0 , zaehler = 0;
